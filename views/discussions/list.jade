@@ -7,9 +7,9 @@ p
   div
     h3
       a(href='/discussions/read/' + discussions[d].id) 
-        =discussions[d].t
+        =discussions[d].title
     p
-      b=discussions[d].m.p
+      b=discussions[d].message.nickname
       :&nbsp;
       =discussions[d].m.b
     span

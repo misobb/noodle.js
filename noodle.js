@@ -60,10 +60,10 @@ models.defineModels(mongoose, function() {
  * ROUTES
  *****************************************************************************/
 
-// list discussions
+// list publics discussions
 app.get('/discussions/public.:format?', function(req, res) {
   Discussion.find({})
-  .sort('m.d', -1)
+  .sort('m.d', -1) // sort by last message date
   .execFind( function(err, discussions) {
     switch (req.params.format) {
       case 'json':
@@ -72,7 +72,7 @@ app.get('/discussions/public.:format?', function(req, res) {
         }));
       break;
       default:
-        res.render('discussions/index.jade', {
+        res.render('discussions/list.jade', {
           locals: { discussions: discussions, title: 'List of discussions' }
         });
     }
@@ -89,10 +89,10 @@ app.get('/discussions/create', function(req, res) {
 app.post('/discussions/create.:format?', function(req, res) {
   var now         = new Date().getTime();
   var discussion = new Discussion({
-    t : req.body.discussion.title,
-    m : {
-      d : now,
-      b : req.body.discussion.message
+    title : req.body.discussion.title,
+    message : {
+      date : now,
+      body : req.body.discussion.message
     }
   });
   discussion.save(function() {

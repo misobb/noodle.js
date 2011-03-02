@@ -1,4 +1,7 @@
-var Discussion;
+/**
+ * we are using 1 character member name for space and memory usage
+ * getters and setters for conveniance
+ */
 
 function defineModels(mongoose, fn) {
   var Schema    = mongoose.Schema,
@@ -11,7 +14,7 @@ function defineModels(mongoose, fn) {
   var Discussion = new Schema({
     t : { type: String, index: true },  // title
     m : {                               // message (last)
-      p : String,                       // pseudo (user)
+      n : String,                       // nickname (user)
       b : String,                       // body
       d : Date                          // date (created)
     },
@@ -20,7 +23,27 @@ function defineModels(mongoose, fn) {
       p : String                        // pseudo (member)
     }]
   });  
+  
+  Discussion.virtual('title')
+    .set(function(title) { this.t = title; })
+    .get(function() { return this.t; });
 
+  Discussion.virtual('message')
+    .set(function(message) { this.m = message; })
+    .get(function() { return this.m; });
+
+  Discussion.virtual('message.nickname')
+    .set(function(nickname) { this.m.n = nickname; })
+    .get(function() { return this.m.n; });
+    
+  Discussion.virtual('message.date')
+    .set(function(date) { this.m.d = date; })
+    .get(function() { return this.m.d; });
+    
+  Discussion.virtual('message.body')
+    .set(function(body) { this.m.b = body; })
+    .get(function() { return this.m.b; });
+  
   mongoose.model('Discussion', Discussion);
 
   /****************************************************************************
