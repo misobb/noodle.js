@@ -20,7 +20,7 @@ function defineModels(mongoose, fn) {
     },
     u : [{                              // users (members)
       i : String,                       // user_id
-      p : String                        // pseudo (member)
+      n : String                        // nickname (member)
     }]
   });  
   
