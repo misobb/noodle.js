@@ -1,0 +1,17 @@
+h1= discussion.t
+
+p
+  a.button(href='/discussions/public')
+    &larr; List of discussions
+
+form(method='post', action='/discussions/update/' + discussion.id)
+  div
+    textarea(name='discussion[message]')
+  div
+    input(type='submit', value='Add a message')
+    
+- each m in messages
+  hr
+  div
+    p=m.b
+    span=m.d

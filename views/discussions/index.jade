@@ -1,0 +1,16 @@
+h1 discussions
+
+p
+  a(class='button', href='/discussions/create') New Discussion
+
+- for (var d in discussions)
+  div
+    h3
+      a(href='/discussions/read/' + discussions[d].id) 
+        =discussions[d].t
+    p
+      b=discussions[d].m.p
+      :&nbsp;
+      =discussions[d].m.b
+    span
+      =discussions[d].m.d

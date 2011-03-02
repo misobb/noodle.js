@@ -1,0 +1,14 @@
+h1= title
+
+p
+  a.button(href='/discussions/public') List of Discussions
+  form(method='post', action='/discussions/create')
+    div
+      label Title:
+      input(name='discussion[title]')
+    div
+      label Message:
+    div
+      textarea(name='discussion[message]')
+    div
+      input(type='submit')
