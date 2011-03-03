@@ -6,6 +6,8 @@ p
 
 form(method='post', action='/discussions/update/' + discussion.id)
   div
+    =user.n
+  div
     textarea(name='discussion[message]')
   div
     input(type='submit', value='Add a message')

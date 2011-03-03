@@ -22,27 +22,7 @@ function defineModels(mongoose, fn) {
       i : String,                       // user_id
       n : String                        // nickname (member)
     }]
-  });  
-  
-  Discussion.virtual('title')
-    .set(function(title) { this.t = title; })
-    .get(function() { return this.t; });
-
-  Discussion.virtual('message')
-    .set(function(message) { this.m = message; })
-    .get(function() { return this.m; });
-
-  Discussion.virtual('message.nickname')
-    .set(function(nickname) { this.m.n = nickname; })
-    .get(function() { return this.m.n; });
-    
-  Discussion.virtual('message.date')
-    .set(function(date) { this.m.d = date; })
-    .get(function() { return this.m.d; });
-    
-  Discussion.virtual('message.body')
-    .set(function(body) { this.m.b = body; })
-    .get(function() { return this.m.b; });
+  });
   
   mongoose.model('Discussion', Discussion);
 

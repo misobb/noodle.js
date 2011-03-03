@@ -8,6 +8,7 @@ var express = require('express'),
   mongoose = require('mongoose@1.1.0')
   sys = require('sys'),
   path = require('path'),
+  auth= require('connect-auth'),
   models = require('./models'),
   app = module.exports = express.createServer();
 
@@ -56,11 +57,31 @@ models.defineModels(mongoose, function() {
  * MIDDLEWARE
  *****************************************************************************/
 
+function loadUser(req, res, next) {
+  User.findById(req.cookies.user_id, function(err, user) {
+    if (!user) {
+      
+      console.log(user);
+      user = new User();
+      user.n = user.generateNickname();
+      user.save(function() {
+        res.cookie('user_id', user._id, { expires: new Date() - 1, httpOnly: true });
+      });
+    }
+    req.user = user;
+    next();
+  });
+}
+
 /******************************************************************************
  * ROUTES
  *****************************************************************************/
 
 // list publics discussions
+app.get('/', function (req, res){
+  res.redirect('/discussions/public');
+});
+
 app.get('/discussions/public.:format?', function(req, res) {
   Discussion.find({})
   .sort('m.d', -1) // sort by last message date
@@ -89,10 +110,10 @@ app.get('/discussions/create', function(req, res) {
 app.post('/discussions/create.:format?', function(req, res) {
   var now         = new Date().getTime();
   var discussion = new Discussion({
-    title : req.body.discussion.title,
-    message : {
-      date : now,
-      body : req.body.discussion.message
+    t : req.body.discussion.title,
+    m : {
+      d : now,
+      b : req.body.discussion.message
     }
   });
   discussion.save(function() {
@@ -112,7 +133,7 @@ app.post('/discussions/create.:format?', function(req, res) {
 });
 
 // read discussion
-app.get('/discussions/read/:id.:format?', function(req, res) {
+app.get('/discussions/read/:id.:format?', loadUser, function(req, res) {
   Discussion.findOne({ _id: req.params.id }, function(err, discussion) {
     Message.find({ i: req.params.id })
     .sort('d', -1)
@@ -123,7 +144,12 @@ app.get('/discussions/read/:id.:format?', function(req, res) {
         break;
         default:
           res.render('discussions/read.jade', {
-            locals: { discussion: discussion, messages: messages, title: discussion.t}
+            locals: {
+              user        : req.user,
+              discussion  : discussion, 
+              messages    : messages, 
+              title       : discussion.t
+            }
           });
       }
     });

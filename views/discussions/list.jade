@@ -1,4 +1,4 @@
-h1 discussions
+h1 List of public discussions
 
 p
   a(class='button', href='/discussions/create') New Discussion
@@ -7,9 +7,9 @@ p
   div
     h3
       a(href='/discussions/read/' + discussions[d].id) 
-        =discussions[d].title
+        =discussions[d].t
     p
-      b=discussions[d].message.nickname
+      b=discussions[d].m.n
       :&nbsp;
       =discussions[d].m.b
     span
