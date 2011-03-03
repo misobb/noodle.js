@@ -4,6 +4,8 @@ p
   a.button(href='/discussions/public') List of Discussions
   form(method='post', action='/discussions/create')
     div
+      =user.n
+    div
       label Title:
       input(name='discussion[title]')
     div

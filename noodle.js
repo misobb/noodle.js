@@ -52,18 +52,17 @@ models.defineModels(mongoose, function() {
   db = mongoose.connect(app.set('db-uri'));
 })
 
-
 /******************************************************************************
  * MIDDLEWARE
  *****************************************************************************/
 
 function loadUser(req, res, next) {
-  User.findById(req.cookies.user_id, function(err, user) {
+  User.findById(req.cookies.userid, function(err, user) {
     if (!user) {
       user = new User();
       user.n = user.generateNickname();
       user.save(function() {
-        res.cookie('user_id', user.id, { 
+        res.cookie('userid', user.id, { 
           expires   : new Date() - 1, 
           httpOnly  : true,
           path      : '/'
@@ -103,9 +102,13 @@ app.get('/discussions/public.:format?', function(req, res) {
 });
 
 // create discussion
-app.get('/discussions/create', function(req, res) {
+app.get('/discussions/create', loadUser, function(req, res) {
   res.render('discussions/create.jade', {
-    locals: { discussion: new Discussion(), title: 'Create a new discussion' }
+    locals: { 
+      discussion  : new Discussion(),
+      user        : req.user,
+      title       : 'Create a new discussion' 
+    }
   });
 });
 
@@ -119,7 +122,11 @@ app.post('/discussions/create.:format?', loadUser, function(req, res) {
       b : req.body.discussion.message
     }
   });
-  discussion.save(function() {
+  discussion.save(function(err) {
+    if (err) {
+      // uid not unique, retry
+      discussion.save();
+    }
     new Message({
       i: discussion._id,
       b: req.body.discussion.message,
