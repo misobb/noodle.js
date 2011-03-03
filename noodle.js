@@ -60,12 +60,14 @@ models.defineModels(mongoose, function() {
 function loadUser(req, res, next) {
   User.findById(req.cookies.user_id, function(err, user) {
     if (!user) {
-      
-      console.log(user);
       user = new User();
       user.n = user.generateNickname();
       user.save(function() {
-        res.cookie('user_id', user._id, { expires: new Date() - 1, httpOnly: true });
+        res.cookie('user_id', user.id, { 
+          expires   : new Date() - 1, 
+          httpOnly  : true,
+          path      : '/'
+        });
       });
     }
     req.user = user;
@@ -107,11 +109,12 @@ app.get('/discussions/create', function(req, res) {
   });
 });
 
-app.post('/discussions/create.:format?', function(req, res) {
+app.post('/discussions/create.:format?', loadUser, function(req, res) {
   var now         = new Date().getTime();
   var discussion = new Discussion({
     t : req.body.discussion.title,
     m : {
+      n : req.user.n,
       d : now,
       b : req.body.discussion.message
     }
@@ -120,7 +123,11 @@ app.post('/discussions/create.:format?', function(req, res) {
     new Message({
       i: discussion._id,
       b: req.body.discussion.message,
-      d: now
+      d: now,
+      u: {
+        i: req.user.id,
+        n: req.user.n
+      }
     }).save();
     switch (req.params.format) {
       case 'json':
@@ -157,17 +164,21 @@ app.get('/discussions/read/:id.:format?', loadUser, function(req, res) {
 });
 
 // update discussion
-app.post('/discussions/update/:id.:format?', function(req, res) {
+app.post('/discussions/update/:id.:format?', loadUser, function(req, res) {
   Discussion.findOne({ _id: req.params.id }, function(err, discussion) {
     var now         = new Date().getTime();
-    discussion.m.p  = now;
+    discussion.m.n  = req.user.n;
     discussion.m.b  = req.body.discussion.message;
     discussion.m.d  = now;
     discussion.save(function() {
       new Message({
         i: discussion._id,
         b: req.body.discussion.message,
-        d: now
+        d: now,
+        u: {
+          i: req.user.id,
+          n: req.user.n
+        }
       }).save();
       switch (req.params.format) {
         case 'json':

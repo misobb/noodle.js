@@ -15,5 +15,8 @@ form(method='post', action='/discussions/update/' + discussion.id)
 - each m in messages
   hr
   div
-    p=m.b
+    p
+      b=m.u.n
+      :
+      =m.b
     span=m.d

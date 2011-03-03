@@ -34,7 +34,7 @@ function defineModels(mongoose, fn) {
     i : { type: String, index: true },  // discussion_id
     u : {                               // user (author)
       i : String,                       // user_id
-      p : String                        // pseudo 
+      n : String                        // nickname 
     },
     b : String,                         // body
     d : Date                            // date (created)
