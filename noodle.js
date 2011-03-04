@@ -147,9 +147,14 @@ app.post('/discussions/create.:format?', loadUser, function(req, res) {
 });
 
 // read discussion
-app.get('/discussions/read/:id.:format?', loadUser, function(req, res) {
-  Discussion.findOne({ _id: req.params.id }, function(err, discussion) {
-    Message.find({ i: req.params.id })
+app.get(/^(?:\/([0-9a-z]{6})?)?$/, loadUser, readDiscussion); // shortcut
+
+app.get('/discussions/read/:id.:format?', loadUser, readDiscussion);
+
+function readDiscussion(req, res) {
+  var discussion_id = req.params.id || req.params[0];
+  Discussion.findOne({ _id: discussion_id }, function(err, discussion) {
+    Message.find({ i: discussion_id })
     .sort('d', -1)
     .execFind( function(err, messages) {
       switch (req.params.format) {
@@ -168,7 +173,7 @@ app.get('/discussions/read/:id.:format?', loadUser, function(req, res) {
       }
     });
   });
-});
+}
 
 // update discussion
 app.post('/discussions/update/:id.:format?', loadUser, function(req, res) {
@@ -192,7 +197,7 @@ app.post('/discussions/update/:id.:format?', loadUser, function(req, res) {
           res.send(discussion);
         break;
         default:
-          res.redirect('/discussions/read/' + req.params.id);
+          res.redirect('/' + req.params.id);
       }
     });
   });
