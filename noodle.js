@@ -56,21 +56,28 @@ models.defineModels(mongoose, function() {
  * MIDDLEWARE
  *****************************************************************************/
 
-function loadUser(req, res, next) {
+function loadUser(req, res, next) { 
+ 
+ console.log(req.cookies.userid);
   User.findById(req.cookies.userid, function(err, user) {
     if (!user) {
-      user = new User();
-      user.n = user.generateNickname();
+      user    = new User();
+      user.n  = user.generateNickname();
       user.save(function() {
-        res.cookie('userid', user.id, { 
+        res.cookie('userid', user._id, { 
           expires   : new Date() - 1, 
           httpOnly  : true,
           path      : '/'
         });
+        
+        console.log(req.cookies.userid);
+        req.user = user;
+        next();
       });
+    } else {
+      req.user = user;
+      next();
     }
-    req.user = user;
-    next();
   });
 }
 
@@ -114,7 +121,7 @@ app.get('/discussions/create', loadUser, function(req, res) {
 
 app.post('/discussions/create.:format?', loadUser, function(req, res) {
   var now         = new Date().getTime();
-  var discussion = new Discussion({
+  var discussion  = new Discussion({
     t : req.body.discussion.title,
     m : {
       n : req.user.n,
@@ -132,7 +139,7 @@ app.post('/discussions/create.:format?', loadUser, function(req, res) {
       b: req.body.discussion.message,
       d: now,
       u: {
-        i: req.user.id,
+        i: req.user._id,
         n: req.user.n
       }
     }).save();

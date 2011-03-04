@@ -97,7 +97,6 @@ function defineModels(mongoose, fn) {
     if (! this._id) {
       var nb = str_pad(Math.ceil(Math.random() * 2176782336), 9, 0, 'STR_PAD_RIGHT');
       this._id = baseConverter(nb, 10, 36);
-      console.log(this.id);
     }
     next();
   });
@@ -124,21 +123,23 @@ function defineModels(mongoose, fn) {
    * User
    ***************************************************************************/
   var User =   new Schema({
-    n : String                          // nickname
+    _id : { type: String, index: { unique: true } },  // unique id
+    n   : String                                      // nickname
   });
   
   User.method('generateNickname', function() {
     var firstparts = [
       'Black',
-      'White',
+      'Good',
       'Red',
       'Blue',
-      'Green',
+      'Sweet',
       'Storm',
       'Big',
       'Little',
       'Strong',
-      'Smart'
+      'Smart',
+      'Brave'
     ];
 
     var secondparts = [
@@ -146,19 +147,29 @@ function defineModels(mongoose, fn) {
       'Bird',
       'Dog',
       'Cat',
-      'Fox',
+      'Rain',
       'Forest',
-      'Horse',
+      'Square',
       'Crown',
-      'Hammer',
+      'Hope',
       'Wind',
       'Fire',
-      'Water'
+      'Water',
+      'Ball',
+      'Doll'
     ];
 
     var first   = firstparts[Math.floor(Math.random() * (firstparts.length -1))];
     var second  = secondparts[Math.floor(Math.random() * (secondparts.length - 1))];
     return first + second;
+  });
+
+  User.pre('save', function(next) {
+    if (! this._id) {
+      var nb = str_pad(Math.ceil(Math.random() * 2176782336), 9, 0, 'STR_PAD_RIGHT');
+      this._id = baseConverter(nb, 10, 36);
+    }
+    next();
   });
   
   mongoose.model('User', User);
