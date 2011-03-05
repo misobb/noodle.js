@@ -93,7 +93,7 @@ app.get('/discussions/public.:format?', function(req, res) {
   .execFind( function(err, discussions) {
     switch (req.params.format) {
       case 'json':
-        res.send({discussions: discussions});
+        res.send({status: 'OK', results: {discussions: discussions}});
       break;
       default:
         for (x=0; x<discussions.length; x=x+1) {
@@ -164,7 +164,7 @@ function readDiscussion(req, res) {
     .execFind( function(err, messages) {
       switch (req.params.format) {
         case 'json':
-          res.send({discussion: discussion,messages: messages});
+          res.send({status: 'OK', results: {discussion: discussion,messages: messages}});
         break;
         default:
           for (x=0; x<messages.length; x=x+1) {
