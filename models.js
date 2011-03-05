@@ -45,7 +45,7 @@ function defineModels(mongoose, fn) {
       n : String                        // nickname 
     },
     b : String,                         // body
-    d : Date                            // date (created)
+    d : String                          // date (created)
   });
   
   mongoose.model('Message', Message);

@@ -12,12 +12,13 @@ div(data-role='page')
         textarea(name='discussion[message]')
       div
         input(type='submit', value='Add a message')
-    
+    br
     ul(data-role='listview')
       - each m in messages
         li
+          p(class='ui-li-aside')
+            =m.d
           p
             b=m.u.n
             \:
             =m.b
-            span=m.d

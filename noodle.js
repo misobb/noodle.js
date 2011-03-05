@@ -10,6 +10,7 @@ var express = require('express'),
   path = require('path'),
   auth= require('connect-auth'),
   models = require('./models'),
+  utils = require('./utilities'),
   app = module.exports = express.createServer();
 
 /******************************************************************************
@@ -95,6 +96,9 @@ app.get('/discussions/public.:format?', function(req, res) {
         res.send({discussions: discussions});
       break;
       default:
+        for (x=0; x<discussions.length; x=x+1) {
+          discussions[x].doc.m.d = utils.prettyDate(discussions[x].doc.m.d * 1000);
+        }
         res.render('discussions/list.jade', {
           locals: { discussions: discussions, title: 'List of discussions' }
         });
@@ -163,6 +167,9 @@ function readDiscussion(req, res) {
           res.send({discussion: discussion,messages: messages});
         break;
         default:
+          for (x=0; x<messages.length; x=x+1) {
+            messages[x].doc.d = utils.prettyDate(messages[x].doc.d * 1000);
+          }
           res.render('discussions/read.jade', {
             locals: {
               user        : req.user,
