@@ -5,8 +5,8 @@
  * Module dependencies.
  */
 
-var app = require('../noodle')
-  , assert = require('assert');
+var app = require('../noodle'),
+  assert = require('assert');
 
 process.env.NODE_ENV = 'test';
 

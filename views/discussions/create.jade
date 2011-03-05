@@ -1,16 +1,20 @@
-h1= title
-
-p
-  a.button(href='/') List of Discussions
-  form(method='post', action='/discussions/create')
-    div
-      =user.n
-    div
-      label Title:
-      input(name='discussion[title]')
-    div
-      label Message:
-    div
-      textarea(name='discussion[message]')
-    div
-      input(type='submit')
+div(data-role='page') 
+  div(data-role='header')
+    h1
+      =title
+    a(data-icon='arrow-l', class='ui-btn-left', href='/', data-transition='slideup')
+      New Cancel
+  div(data-role='content')
+    p
+      form(method='post', action='/discussions/create')
+        div
+          =user.n
+        div
+          label Title:
+          input(name='discussion[title]')
+        div
+          label Message:
+        div
+          textarea(name='discussion[message]')
+        div
+          input(type='submit', value='Add a message')

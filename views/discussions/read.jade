@@ -1,22 +1,23 @@
-h1= discussion.t
-
-p
-  a.button(href='/')
-    &larr; List of discussions
-
-form(method='post', action='/discussions/update/' + discussion.id)
-  div
-    =user.n
-  div
-    textarea(name='discussion[message]')
-  div
-    input(type='submit', value='Add a message')
+div(data-role='page') 
+  div(data-role='header')
+    h1
+      =discussion.t
+    a(data-icon="arrow-l", class="ui-btn-left", href="/", data-transition="slide", data-back="true")
+      Back Public
+  div(data-role='content')
+    form(method='post', action='/discussions/update/' + discussion.id)
+      div
+        =user.n
+      div
+        textarea(name='discussion[message]')
+      div
+        input(type='submit', value='Add a message')
     
-- each m in messages
-  hr
-  div
-    p
-      b=m.u.n
-      :
-      =m.b
-    span=m.d
+    ul(data-role='listview')
+      - each m in messages
+        li
+          p
+            b=m.u.n
+            \:
+            =m.b
+            span=m.d

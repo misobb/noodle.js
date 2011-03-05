@@ -1,16 +1,21 @@
-h1 List of public discussions
-
-p
-  a(class='button', href='/discussions/create') New Discussion
-
-- for (var d in discussions)
-  div
-    h3
-      a(href='/' + discussions[d].id) 
-        =discussions[d].t
-    p
-      b=discussions[d].m.n
-      :
-      =discussions[d].m.b
-    span
-      =discussions[d].m.d
+div(data-role='page') 
+  div(data-role='header')
+    h1
+      \Public
+    a(data-icon='plus', class='ui-btn-right', href='/discussions/create', data-transition='slideup')
+      New Discussion
+  div(data-role='content')
+    ul(data-role='listview')
+      - for (var d in discussions)
+        li
+          h3
+            a(href='/' + discussions[d].id) 
+              =discussions[d].t
+          p
+            strong
+              =discussions[d].m.n
+            \:
+            =discussions[d].m.b
+          p(class='ui-li-aside')
+            strong
+              =discussions[d].m.d

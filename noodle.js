@@ -3,9 +3,9 @@
  *****************************************************************************/
 
 var express = require('express'),
-  connect = require('connect@0.5.10'),
-  jade = require('jade@0.6.3'),
-  mongoose = require('mongoose@1.1.0')
+  connect = require('connect'),
+  jade = require('jade'),
+  mongoose = require('mongoose')
   sys = require('sys'),
   path = require('path'),
   auth= require('connect-auth'),
@@ -57,8 +57,6 @@ models.defineModels(mongoose, function() {
  *****************************************************************************/
 
 function loadUser(req, res, next) { 
- 
- console.log(req.cookies.userid);
   User.findById(req.cookies.userid, function(err, user) {
     if (!user) {
       user    = new User();
@@ -69,8 +67,6 @@ function loadUser(req, res, next) {
           httpOnly  : true,
           path      : '/'
         });
-        
-        console.log(req.cookies.userid);
         req.user = user;
         next();
       });
@@ -96,9 +92,7 @@ app.get('/discussions/public.:format?', function(req, res) {
   .execFind( function(err, discussions) {
     switch (req.params.format) {
       case 'json':
-        res.send(discussions.map(function(discussions) {
-          return discussions;
-        }));
+        res.send({discussions: discussions});
       break;
       default:
         res.render('discussions/list.jade', {
@@ -120,7 +114,7 @@ app.get('/discussions/create', loadUser, function(req, res) {
 });
 
 app.post('/discussions/create.:format?', loadUser, function(req, res) {
-  var now         = new Date().getTime();
+  var now         = (new Date().getTime()) / 1000;
   var discussion  = new Discussion({
     t : req.body.discussion.title,
     m : {
@@ -166,7 +160,7 @@ function readDiscussion(req, res) {
     .execFind( function(err, messages) {
       switch (req.params.format) {
         case 'json':
-          res.send(discussion);
+          res.send({discussion: discussion,messages: messages});
         break;
         default:
           res.render('discussions/read.jade', {
@@ -185,7 +179,7 @@ function readDiscussion(req, res) {
 // update discussion
 app.post('/discussions/update/:id.:format?', loadUser, function(req, res) {
   Discussion.findOne({ _id: req.params.id }, function(err, discussion) {
-    var now         = new Date().getTime();
+    var now         = (new Date().getTime()) / 1000;
     discussion.m.n  = req.user.n;
     discussion.m.b  = req.body.discussion.message;
     discussion.m.d  = now;
