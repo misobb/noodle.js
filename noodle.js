@@ -170,7 +170,7 @@ app.post('/discussions/create.:format?', loadUser, function(req, res) {
     }
     new Message({
       i: discussion._id,
-      b: req.body.discussion.message,
+      b: req.body.message,
       d: now,
       u: {
         i: req.user._id,
