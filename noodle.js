@@ -3,15 +3,14 @@
  *****************************************************************************/
 
 var express = require('express'),
-  connect = require('connect'),
-  jade = require('jade'),
-  mongoose = require('mongoose')
-  sys = require('sys'),
-  path = require('path'),
-  auth= require('connect-auth'),
-  models = require('./models'),
-  utils = require('./utilities'),
-  app = module.exports = express.createServer();
+  connect   = require('connect'),
+  jade      = require('jade'),
+  mongoose  = require('mongoose')
+  sys       = require('sys'),
+  path      = require('path'),
+  models    = require('./models'),
+  utils     = require('./utilities'),
+  app       = module.exports = express.createServer();
 
 /******************************************************************************
  * CONFIGURATIONS
@@ -58,24 +57,36 @@ models.defineModels(mongoose, function() {
  *****************************************************************************/
 
 function loadUser(req, res, next) { 
-  User.findById(req.cookies.userid, function(err, user) {
-    if (!user) {
-      user    = new User();
-      user.n  = user.generateNickname();
-      user.save(function() {
-        res.cookie('userid', user._id, { 
-          expires   : new Date() - 1, 
-          httpOnly  : true,
-          path      : '/'
+    switch (req.params.format) {
+      case 'json':
+        if (! req.headers.authorization) {
+          res.send({"status": "FAIL", "results": "http basic authentication required"});
+        }
+        var basic_auth = utils.decodeBase64(req.headers.authorization);
+        var user_id = basic_auth.user_id;
+      break;
+      default:
+        var user_id = req.cookies.userid;
+      break;
+    }
+    User.findById(user_id, function(err, user) {
+      if (!user) {
+        user    = new User();
+        user.n  = user.generateNickname();
+        user.save(function() {
+          res.cookie('userid', user._id, { 
+            expires   : new Date() - 1, 
+            httpOnly  : true,
+            path      : '/'
+          });
+          req.user = user;
+          next();
         });
+      } else {
         req.user = user;
         next();
-      });
-    } else {
-      req.user = user;
-      next();
-    }
-  });
+      }
+    });
 }
 
 /******************************************************************************
@@ -106,8 +117,28 @@ app.get('/discussions/public.:format?', function(req, res) {
   });
 });
 
+// list followed discussion
+app.get('/discussions/followed.:format?', loadUser, function(req, res) {
+  Discussion.find({ 'u._id' : req.user._id })
+  .sort('m.d', -1) // sort by last message date
+  .execFind( function(err, discussions) {
+    switch (req.params.format) {
+      case 'json':
+        res.send({status: 'OK', results: {discussions: discussions}});
+      break;
+      default:
+        for (x=0; x<discussions.length; x=x+1) {
+          discussions[x].doc.m.d = utils.prettyDate(discussions[x].doc.m.d * 1000);
+        }
+        res.render('discussions/list.jade', {
+          locals: { discussions: discussions, title: 'followed discussion' }
+        });
+    }
+  });
+});
+
 // create discussion
-app.get('/discussions/create', loadUser, function(req, res) {
+app.get('/discussions/create.:format?', loadUser, function(req, res) {
   res.render('discussions/create.jade', {
     locals: { 
       discussion  : new Discussion(),
@@ -127,6 +158,11 @@ app.post('/discussions/create.:format?', loadUser, function(req, res) {
       b : req.body.discussion.message
     }
   });
+  discussion.u = new array();
+  discussion.u.push({
+    _id : req.user._id,
+    n   : req.user.n
+  })
   discussion.save(function(err) {
     if (err) {
       // uid not unique, retry
@@ -158,7 +194,9 @@ app.get('/discussions/read/:id.:format?', loadUser, readDiscussion);
 
 function readDiscussion(req, res) {
   var discussion_id = req.params.id || req.params[0];
+  console.log(discussion_id); 
   Discussion.findOne({ _id: discussion_id }, function(err, discussion) {
+    console.log(discussion);
     Message.find({ i: discussion_id })
     .sort('d', -1)
     .execFind( function(err, messages) {
@@ -167,6 +205,7 @@ function readDiscussion(req, res) {
           res.send({status: 'OK', results: {discussion: discussion,messages: messages}});
         break;
         default:
+          console.log(discussion);
           for (x=0; x<messages.length; x=x+1) {
             messages[x].doc.d = utils.prettyDate(messages[x].doc.d * 1000);
           }
@@ -190,6 +229,20 @@ app.post('/discussions/update/:id.:format?', loadUser, function(req, res) {
     discussion.m.n  = req.user.n;
     discussion.m.b  = req.body.discussion.message;
     discussion.m.d  = now;
+    var in_array = false;
+    for (x = 0; x < discussion.u.length; x=x+1) {
+      if (discussion.u[x]._id == req.user._id) {
+        in_array = true;
+      }
+    }
+    if (! in_array) {
+      
+        discussion.u.push({ 
+          _id : req.user._id, 
+          n   : req.user.n
+        });
+    }
+    
     discussion.save(function() {
       new Message({
         i: discussion._id,
