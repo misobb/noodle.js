@@ -59,6 +59,7 @@ models.defineModels(mongoose, function() {
 function loadUser(req, res, next) { 
     switch (req.params.format) {
       case 'json':
+        console.log(req.headers.authorization);
         if (! req.headers.authorization) {
           res.send({"status": "FAIL", "results": "http basic authentication required"});
         }
@@ -158,7 +159,6 @@ app.post('/discussions/create.:format?', loadUser, function(req, res) {
       b : req.body.discussion.message
     }
   });
-  discussion.u = new array();
   discussion.u.push({
     _id : req.user._id,
     n   : req.user.n
