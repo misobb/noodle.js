@@ -152,11 +152,11 @@ app.get('/discussions/create.:format?', loadUser, function(req, res) {
 app.post('/discussions/create.:format?', loadUser, function(req, res) {
   var now         = (new Date().getTime()) / 1000;
   var discussion  = new Discussion({
-    t : req.body.discussion.title,
+    t : req.body.title,
     m : {
       n : req.user.n,
       d : now,
-      b : req.body.discussion.message
+      b : req.body.message
     }
   });
   discussion.u.push({
