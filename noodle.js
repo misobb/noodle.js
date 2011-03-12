@@ -59,9 +59,9 @@ models.defineModels(mongoose, function() {
 function loadUser(req, res, next) { 
     switch (req.params.format) {
       case 'json':
-        console.log(req.headers.authorization);
         if (! req.headers.authorization) {
           res.send({"status": "FAIL", "results": "http basic authentication required"});
+          res.end();
         }
         var basic_auth = utils.decodeBase64(req.headers.authorization);
         var user_id = basic_auth.user_id;
@@ -140,7 +140,7 @@ app.get('/discussions/followed.:format?', loadUser, function(req, res) {
 });
 
 // create discussion
-app.get('/discussions/create.:format?', loadUser, function(req, res) {
+app.get('/discussions/create', loadUser, function(req, res) {
   res.render('discussions/create.jade', {
     locals: { 
       discussion  : new Discussion(),
@@ -151,45 +151,49 @@ app.get('/discussions/create.:format?', loadUser, function(req, res) {
 });
 
 app.post('/discussions/create.:format?', loadUser, function(req, res) {
-  var now         = (new Date().getTime()) / 1000;
-  var discussion  = new Discussion({
-    t : req.body.title,
-    m : {
-      u: {
-        id : req.user._id,
-        n   : req.user.n
-      },
-      d : now,
-      b : req.body.message
-    }
-  });
-  discussion.u.push({
-    id : req.user._id,
-    n   : req.user.n
-  });
-  discussion.save(function(err) {
-    if (err) {
-      // uid not unique, retry
-      console.log(err);
-      discussion.save();
-    }
-    new Message({
-      i: discussion._id,
-      b: req.body.message,
-      d: now,
-      u: {
-        id : req.user._id,
-        n   : req.user.n
+  if (typeof req.body.title == 'undefined' || typeof req.body.message == 'undefined') {
+    res.send({"status": "FAIL", "results": "title and message must be provided"});
+  } else {
+    var now         = (new Date().getTime()) / 1000;
+    var discussion  = new Discussion({
+      t : req.body.title,
+      m : {
+        u: {
+          id : req.user._id,
+          n   : req.user.n
+        },
+        d : now,
+        b : req.body.message
       }
-    }).save();
-    switch (req.params.format) {
-      case 'json':
-        res.send(discussion);
-      break;
-      default:
-        res.redirect('/discussions/read/' + discussion._id);
-    }
-  });
+    });
+    discussion.u.push({
+      id : req.user._id,
+      n   : req.user.n
+    });
+    discussion.save(function(err) {
+      if (err) {
+        // uid not unique, retry
+        console.log(err);
+        discussion.save();
+      }
+      new Message({
+        i: discussion._id,
+        b: req.body.message,
+        d: now,
+        u: {
+          id : req.user._id,
+          n   : req.user.n
+        }
+      }).save();
+      switch (req.params.format) {
+        case 'json':
+          res.send(discussion);
+        break;
+        default:
+          res.redirect('/discussions/read/' + discussion._id);
+      }
+    });
+  } 
 });
 
 // read discussion
@@ -203,22 +207,27 @@ function readDiscussion(req, res) {
     Message.find({ i: discussion_id })
     .sort('d', -1)
     .execFind( function(err, messages) {
-      switch (req.params.format) {
-        case 'json':
-          res.send({status: 'OK', results: {discussion: discussion,messages: messages}});
-        break;
-        default:
-          for (x=0; x<messages.length; x=x+1) {
-            messages[x].doc.d = utils.prettyDate(messages[x].doc.d * 1000);
-          }
-          res.render('discussions/read.jade', {
-            locals: {
-              user        : req.user,
-              discussion  : discussion, 
-              messages    : messages, 
-              title       : discussion.t
+      if (err) {
+        res.send({"status": "FAIL", "results": "discussion not found"});
+      } else
+      {
+        switch (req.params.format) {
+          case 'json':
+            res.send({status: 'OK', results: {discussion: discussion,messages: messages}});
+          break;
+          default:
+            for (x=0; x<messages.length; x=x+1) {
+              messages[x].doc.d = utils.prettyDate(messages[x].doc.d * 1000);
             }
-          });
+            res.render('discussions/read.jade', {
+              locals: {
+                user        : req.user,
+                discussion  : discussion, 
+                messages    : messages, 
+                title       : discussion.t
+              }
+            });
+        }
       }
     });
   });
@@ -226,53 +235,58 @@ function readDiscussion(req, res) {
 
 // create a message inside a discussion
 app.post('/messages/create.:format?', loadUser, function(req, res) {
-  Discussion.findOne({ _id: req.body.discussion_id }, function(err, discussion) {
-    if (err) {
-      console.log(err);
-    }
-    var now         = (new Date().getTime()) / 1000;
-    discussion.m.n  = req.user.n;
-    discussion.m.b  = req.body.message;
-    discussion.m.d  = now;
-    var in_array = false;
-    for (x = 0; x < discussion.u.length; x=x+1) {
-      if (discussion.u[x]._id == req.user._id) {
-        in_array = true;
-      }
-    }
-    if (! in_array) {
-      discussion.u.push({ 
-        id : req.user._id, 
-        n   : req.user.n
-      });
-    }
-    discussion.save(function(err) {
+  if (typeof req.body.discussion_id == 'undefined' || typeof req.body.message == 'undefined') {
+    res.send({"status": "FAIL", "results": "discussion_id and message must be provided"});
+  } else {
+    Discussion.findOne({ _id: req.body.discussion_id }, function(err, discussion) {
       if (err) {
-        console.log(err);
+        res.send({"status": "FAIL", "results": "discussion not found"});
+      } else {
+        var now         = (new Date().getTime()) / 1000;
+        discussion.m.n  = req.user.n;
+        discussion.m.b  = req.body.message;
+        discussion.m.d  = now;
+        var in_array = false;
+        for (x = 0; x < discussion.u.length; x=x+1) {
+          if (discussion.u[x]._id == req.user._id) {
+            in_array = true;
+          }
+        }
+        if (! in_array) {
+          discussion.u.push({ 
+            id : req.user._id, 
+            n   : req.user.n
+          });
+        }
+        discussion.save(function(err) {
+          if (err) {
+            console.log(err);
+          }
+          var message = new Message({
+            i: discussion._id,
+            b: req.body.message,
+            d: now,
+            u: {
+              id: req.user.id,
+              n: req.user.n
+            }
+          });
+          message.save(function(err) {
+            if (err) {
+              console.log(err);
+            }
+            switch (req.params.format) {
+              case 'json':
+                res.send({status: 'OK', results: {message: message}});
+              break;
+              default:
+                res.redirect('/' + message.i);
+            }
+          });
+        });
       }
-      var message = new Message({
-        i: discussion._id,
-        b: req.body.message,
-        d: now,
-        u: {
-          id: req.user.id,
-          n: req.user.n
-        }
-      });
-      message.save(function(err) {
-        if (err) {
-          console.log(err);
-        }
-        switch (req.params.format) {
-          case 'json':
-            res.send({status: 'OK', results: {message: message}});
-          break;
-          default:
-            res.redirect('/' + message.i);
-        }
-      });
     });
-  });
+  }
 });
 
 // create user
