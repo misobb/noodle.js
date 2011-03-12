@@ -305,3 +305,7 @@ if (!module.parent) {
   app.listen(3000);
   console.log("Express server listening on port %d", app.address().port)
 }
+
+process.on('uncaughtException',function(err){
+  console.log(err);
+})
