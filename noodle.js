@@ -247,7 +247,8 @@ app.post('/messages/create.:format?', loadUser, function(req, res) {
         res.send({"status": "FAIL", "results": "discussion not found"});
       } else {
         var now         = (new Date().getTime()) / 1000;
-        discussion.m.n  = req.user.n;
+        discussion.m.u.id  = req.user.id;
+        discussion.m.u.n  = req.user.n;
         discussion.m.b  = req.body.message;
         discussion.m.d  = now;
         var in_array = false;
