@@ -121,7 +121,7 @@ app.get('/discussions/public.:format?', function(req, res) {
 
 // list followed discussion
 app.get('/discussions/followed.:format?', loadUser, function(req, res) {
-  Discussion.find({ 'u._id' : req.user._id })
+  Discussion.find({ 'u.id' : req.user._id })
   .sort('m.d', -1) // sort by last message date
   .execFind( function(err, discussions) {
     switch (req.params.format) {
@@ -224,12 +224,15 @@ function readDiscussion(req, res) {
   });
 }
 
-// update discussion
-app.post('/discussions/update/:id.:format?', loadUser, function(req, res) {
-  Discussion.findOne({ _id: req.params.id }, function(err, discussion) {
+// create a message inside a discussion
+app.post('/messages/create.:format?', loadUser, function(req, res) {
+  Discussion.findOne({ _id: req.body.discussion_id }, function(err, discussion) {
+    if (err) {
+      console.log(err);
+    }
     var now         = (new Date().getTime()) / 1000;
     discussion.m.n  = req.user.n;
-    discussion.m.b  = req.body.discussion.message;
+    discussion.m.b  = req.body.message;
     discussion.m.d  = now;
     var in_array = false;
     for (x = 0; x < discussion.u.length; x=x+1) {
@@ -238,30 +241,36 @@ app.post('/discussions/update/:id.:format?', loadUser, function(req, res) {
       }
     }
     if (! in_array) {
-      
-        discussion.u.push({ 
-          id : req.user._id, 
-          n   : req.user.n
-        });
+      discussion.u.push({ 
+        id : req.user._id, 
+        n   : req.user.n
+      });
     }
-    
-    discussion.save(function() {
-      new Message({
+    discussion.save(function(err) {
+      if (err) {
+        console.log(err);
+      }
+      var message = new Message({
         i: discussion._id,
-        b: req.body.discussion.message,
+        b: req.body.message,
         d: now,
         u: {
           id: req.user.id,
           n: req.user.n
         }
-      }).save();
-      switch (req.params.format) {
-        case 'json':
-          res.send(discussion);
-        break;
-        default:
-          res.redirect('/' + req.params.id);
-      }
+      });
+      message.save(function(err) {
+        if (err) {
+          console.log(err);
+        }
+        switch (req.params.format) {
+          case 'json':
+            res.send({status: 'OK', results: {message: message}});
+          break;
+          default:
+            res.redirect('/' + message.i);
+        }
+      });
     });
   });
 });
