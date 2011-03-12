@@ -19,11 +19,11 @@ var express = require('express'),
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
-  app.use(express.bodyDecoder());
-  app.use(express.cookieDecoder());
+  app.use(express.bodyParser());
+  app.use(express.cookieParser());
   app.use(express.methodOverride());
   app.use(app.router);
-  app.use(express.staticProvider(__dirname + '/public'));
+  app.use(express.static(__dirname + '/public'));
 });
 
 app.configure('test', function() {
@@ -75,8 +75,9 @@ function loadUser(req, res, next) {
         user    = new User();
         user.n  = user.generateNickname();
         user.save(function() {
+          var past = new Date() + 9999999999;
           res.cookie('userid', user._id, { 
-            expires   : new Date() - 1, 
+            expires   : new Date(past), 
             httpOnly  : true,
             path      : '/'
           });
@@ -154,18 +155,22 @@ app.post('/discussions/create.:format?', loadUser, function(req, res) {
   var discussion  = new Discussion({
     t : req.body.title,
     m : {
-      n : req.user.n,
+      u: {
+        id : req.user._id,
+        n   : req.user.n
+      },
       d : now,
       b : req.body.message
     }
   });
   discussion.u.push({
-    _id : req.user._id,
+    id : req.user._id,
     n   : req.user.n
-  })
+  });
   discussion.save(function(err) {
     if (err) {
       // uid not unique, retry
+      console.log(err);
       discussion.save();
     }
     new Message({
@@ -173,8 +178,8 @@ app.post('/discussions/create.:format?', loadUser, function(req, res) {
       b: req.body.message,
       d: now,
       u: {
-        i: req.user._id,
-        n: req.user.n
+        id : req.user._id,
+        n   : req.user.n
       }
     }).save();
     switch (req.params.format) {
@@ -194,9 +199,7 @@ app.get('/discussions/read/:id.:format?', loadUser, readDiscussion);
 
 function readDiscussion(req, res) {
   var discussion_id = req.params.id || req.params[0];
-  console.log(discussion_id); 
   Discussion.findOne({ _id: discussion_id }, function(err, discussion) {
-    console.log(discussion);
     Message.find({ i: discussion_id })
     .sort('d', -1)
     .execFind( function(err, messages) {
@@ -205,7 +208,6 @@ function readDiscussion(req, res) {
           res.send({status: 'OK', results: {discussion: discussion,messages: messages}});
         break;
         default:
-          console.log(discussion);
           for (x=0; x<messages.length; x=x+1) {
             messages[x].doc.d = utils.prettyDate(messages[x].doc.d * 1000);
           }
@@ -238,7 +240,7 @@ app.post('/discussions/update/:id.:format?', loadUser, function(req, res) {
     if (! in_array) {
       
         discussion.u.push({ 
-          _id : req.user._id, 
+          id : req.user._id, 
           n   : req.user.n
         });
     }
@@ -249,7 +251,7 @@ app.post('/discussions/update/:id.:format?', loadUser, function(req, res) {
         b: req.body.discussion.message,
         d: now,
         u: {
-          i: req.user.id,
+          id: req.user.id,
           n: req.user.n
         }
       }).save();

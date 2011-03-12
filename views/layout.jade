@@ -5,4 +5,6 @@ html
     link(rel='stylesheet', href='http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.css')
     script(src='http://code.jquery.com/jquery-1.5.min.js', type='application/javascript')
     script(src='http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js', type='application/javascript')
+    script(type='application/javascript')
+      $('a').click(function() {var $this = $(this);if ( !$this.attr('rel') || $this.attr('rel') != 'external' )$(document.getElementById( $this.attr('href') )).listView();});
   body!= body

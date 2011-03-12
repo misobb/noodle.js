@@ -68,10 +68,13 @@ function defineModels(mongoose, fn) {
   var Discussion = new Schema({
     _id  : { type: String, index: { unique: true } }, // unique id
     t   : String,                                     // title
-    m   : {                                           // message (last)
-      n : String,                                     // nickname (user)
-      b : String,                                     // body
-      d : String                                      // date (created)
+    m   : {
+      u : {
+        id : String,
+        n : String
+      },
+      b : String,
+      d : String
     },
     u   : [User]
   });
@@ -93,7 +96,7 @@ function defineModels(mongoose, fn) {
   var Message = new Schema({
     i : { type: String, index: true },  // discussion_id
     u : {                               // user (author)
-      i : String,                       // user_id
+      id : String,                       // user_id
       n : String                        // nickname 
     },
     b : String,                         // body
