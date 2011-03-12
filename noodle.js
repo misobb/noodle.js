@@ -64,6 +64,10 @@ function loadUser(req, res, next) {
           res.end();
         }
         var basic_auth = utils.decodeBase64(req.headers.authorization);
+        if (! basic_auth) {
+          res.send({"status": "FAIL", "results": "wrong basic authentication"});
+          res.end();
+        }
         var user_id = basic_auth.user_id;
       break;
       default:
@@ -187,7 +191,7 @@ app.post('/discussions/create.:format?', loadUser, function(req, res) {
       }).save();
       switch (req.params.format) {
         case 'json':
-          res.send(discussion);
+          res.send({status: 'OK', results: {discussion: discussion}});
         break;
         default:
           res.redirect('/discussions/read/' + discussion._id);
@@ -307,5 +311,6 @@ if (!module.parent) {
 }
 
 process.on('uncaughtException',function(err){
-  console.log(err);
+  var now = new Date();
+  console.log(now.toUTCString() + err);
 })
