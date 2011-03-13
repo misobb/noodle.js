@@ -1,0 +1,31 @@
+div(data-role='page') 
+  div(data-role='header', data-position="fixed")
+    h1
+      \Followed
+    a(data-icon='plus', class='ui-btn-right', href='/discussions/create', data-transition='slideup')
+      Discussion Discussion
+  div(data-role='content')
+    script(type='text/javascript')
+      $('ul').listview('refresh');
+    ul(data-role='listview')
+      - for (var d in discussions)
+        li
+          h3
+            a(href='/' + discussions[d].id) 
+              =discussions[d].t
+          p
+            strong
+              =discussions[d].m.u.n
+            \:
+            =discussions[d].m.b
+          p(class='ui-li-aside')
+            =discussions[d].m.d
+  div(data-role="footer", data-position="fixed")
+    div(data-role="navbar")
+      ul
+        li
+          a(href="/discussions/public")
+            \Public
+        li
+          a(href="/discussions/followed", class="ui-btn-active")
+            \Followed
