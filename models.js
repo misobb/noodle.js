@@ -62,6 +62,17 @@ function defineModels(mongoose, fn) {
     mongoose.model('User', User);
     
   /****************************************************************************
+   * Subscription
+   ***************************************************************************/
+  
+  var Subscription = new Schema({
+    uid : String,
+    n : String
+  });
+
+  mongoose.model('Subscription', Subscription);
+  
+  /****************************************************************************
    * Discussion
    ***************************************************************************/
    
@@ -76,7 +87,7 @@ function defineModels(mongoose, fn) {
       b : String,
       d : String
     },
-    u   : [User]
+    s   : [Subscription]
   });
 
   Discussion.pre('save', function(next) {

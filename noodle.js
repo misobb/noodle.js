@@ -45,10 +45,11 @@ app.configure('production', function() {
  * MODELS
  *****************************************************************************/
  
-models.defineModels(mongoose, function() {
-  app.Discussion  = Discussion  = mongoose.model('Discussion');
-  app.Message     = Message     = mongoose.model('Message');
-  app.User        = User        = mongoose.model('User');
+models.defineModels(mongoose, function() { 
+  app.User          = User          = mongoose.model('User'); 
+  app.Subscription  = Subscription  = mongoose.model('Subscription');
+  app.Discussion    = Discussion    = mongoose.model('Discussion');
+  app.Message       = Message       = mongoose.model('Message');
   db = mongoose.connect(app.set('db-uri'));
 })
 
@@ -125,7 +126,7 @@ app.get('/discussions/public.:format?', function(req, res) {
 
 // list followed discussion
 app.get('/discussions/followed.:format?', loadUser, function(req, res) {
-  Discussion.find({ 'u.id' : req.user._id })
+  Discussion.find({ 's.uid' : req.user._id })
   .sort('m.d', -1) // sort by last message date
   .execFind( function(err, discussions) {
     switch (req.params.format) {
@@ -170,8 +171,8 @@ app.post('/discussions/create.:format?', loadUser, function(req, res) {
         b : req.body.message
       }
     });
-    discussion.u.push({
-      id : req.user._id,
+    discussion.s.push({
+      uid : req.user._id,
       n   : req.user.n
     });
     discussion.save(function(err) {
@@ -213,8 +214,7 @@ function readDiscussion(req, res) {
     .execFind( function(err, messages) {
       if (err) {
         res.send({"status": "FAIL", "results": "discussion not found"});
-      } else
-      {
+      } else {
         switch (req.params.format) {
           case 'json':
             res.send({status: 'OK', results: {discussion: discussion,messages: messages}});
@@ -252,14 +252,15 @@ app.post('/messages/create.:format?', loadUser, function(req, res) {
         discussion.m.b  = req.body.message;
         discussion.m.d  = now;
         var in_array = false;
-        for (x = 0; x < discussion.u.length; x=x+1) {
-          if (discussion.u[x]._id == req.user._id) {
+        for (x = 0; x < discussion.s.length; x=x+1) {
+          if (discussion.s[x].uid == req.user._id) {
             in_array = true;
+            break;
           }
         }
         if (! in_array) {
-          discussion.u.push({ 
-            id : req.user._id, 
+          discussion.s.push({ 
+            uid : req.user._id, 
             n   : req.user.n
           });
         }
