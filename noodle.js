@@ -117,7 +117,7 @@ app.get('/discussions/public.:format?', function(req, res) {
         for (x=0; x<discussions.length; x=x+1) {
           discussions[x].doc.m.d = utils.prettyDate(discussions[x].doc.m.d * 1000);
         }
-        res.render('discussions/list.jade', {
+        res.render('discussions/public.jade', {
           locals: { discussions: discussions, title: 'List of discussions' }
         });
     }
@@ -137,8 +137,8 @@ app.get('/discussions/followed.:format?', loadUser, function(req, res) {
         for (x=0; x<discussions.length; x=x+1) {
           discussions[x].doc.m.d = utils.prettyDate(discussions[x].doc.m.d * 1000);
         }
-        res.render('discussions/list.jade', {
-          locals: { discussions: discussions, title: 'followed discussion' }
+        res.render('discussions/followed.jade', {
+          locals: { discussions: discussions, title: 'Followed' }
         });
     }
   });
@@ -309,10 +309,11 @@ app.get('/users/create.json', function(req, res){
  *****************************************************************************/
 if (!module.parent) {
   app.listen(3000);
-  console.log("Express server listening on port %d", app.address().port)
+  var now = new Date();
+  console.log(now.toUTCString() + " noodle.js served on port %d", app.address().port)
 }
 
 process.on('uncaughtException',function(err){
   var now = new Date();
-  console.log(now.toUTCString() + err);
+  console.log(now.toUTCString() + " " + err);
 })
