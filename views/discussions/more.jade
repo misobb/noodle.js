@@ -3,9 +3,9 @@ div(data-role='page')
     h1#misobb
       \More
   div(data-role='content')
-    form(method='post', action='/user/update')
+    form(method='post', action='/users/update', data-transition="none")
       div
-        input(type='text', value=user.n)
+        input(type='text', name="nickname", value=user.n)
       div
         input(type='submit', value='Update your identity')
   !=partial('../partials/footer', { locals: { page: "More" } })

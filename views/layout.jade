@@ -4,12 +4,13 @@ html
     <link rel="apple-touch-startup-image" href="/images/splash.png" />  
     <link rel="apple-touch-icon" href="/images/icon.png"/> 
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" /> no
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     title miso.bb
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.css')
     script(src='http://code.jquery.com/jquery-1.5.min.js', type='application/javascript')
     script(src='http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js', type='application/javascript')
+    script(src='/javascripts/jquery-mobile-custom.js', type='application/javascript')
     script(type='application/javascript')
       $('a').click(function() {var $this = $(this);if ( !$this.attr('rel') || $this.attr('rel') != 'external' )$(document.getElementById( $this.attr('href') )).listView();});
   body!= body

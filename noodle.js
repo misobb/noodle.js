@@ -21,6 +21,7 @@ app.configure(function(){
   app.set('view engine', 'jade');
   app.use(express.bodyParser());
   app.use(express.cookieParser());
+  app.use(express.session({ secret: "baka neko" }));
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
@@ -304,12 +305,39 @@ app.get('/users/create.json', function(req, res){
   });
 });
 
+// update user
+app.post('/users/update.:format?', loadUser, function(req, res){
+  if (typeof req.body.nickname == 'undefined') {
+    res.send({"status": "FAIL", "results": "nickname must be provided"});
+  } else {
+    User.findById(req.user._id, function(err, user) {
+      if (!user) {
+        res.send({"status": "FAIL", "results": "user doesn't exists"});
+      } else {
+        user.n = req.body.nickname;
+        user.save(function (err){
+          req.flash('info', 'identity updated');
+          switch (req.params.format) {
+            case 'json':
+              res.send({status: 'OK', results: {user: user}});
+            break;
+            default:
+              res.redirect('/more');
+            break;
+          }
+        });
+      }
+    });
+  }
+});
+
 // create user
 app.get('/more', loadUser, function(req, res){
+  //@TODO flash message : console.log(req.session.flash);
   res.render('discussions/more.jade', {
     locals: {
-      user        : req.user,
-      title       : 'Settings' 
+      user  : req.user,
+      title : 'Settings' 
     }
   });
 });
