@@ -3,16 +3,16 @@ div(data-role="footer", data-position="fixed")
     ul
       li
         - if (page == "Public")
-          a(href="/discussions/public", class="ui-btn-active", data-icon="custom", id="public") Public
+          a(href="/discussions/public", class="ui-btn-active", data-icon="custom", id="public", data-transition="none") Public
         - else
-          a(href="/discussions/public", data-icon="custom", id="public") Public
+          a(href="/discussions/public", data-icon="custom", id="public", data-transition="none") Public
       li
         - if (page == "Followed")
-          a(href="/discussions/followed", class="ui-btn-active", data-icon="custom", id="followed") Followed
+          a(href="/discussions/followed", class="ui-btn-active", data-icon="custom", id="followed", data-transition="none") Followed
         - else
-          a(href="/discussions/followed", data-icon="custom", id="followed") Followed
+          a(href="/discussions/followed", data-icon="custom", id="followed", data-transition="none") Followed
       li
         - if (page == "More")
-          a(href="/more", class="ui-btn-active", data-icon="custom", id="more") More ...
+          a(href="/more", class="ui-btn-active", data-icon="custom", id="more", data-transition="none") More ...
         - else
-          a(href="/more", data-icon="custom", id="more") More
+          a(href="/more", data-icon="custom", id="more", data-transition="none") More

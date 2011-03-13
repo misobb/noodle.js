@@ -6,7 +6,7 @@ body {
  * HEADER
  *****************************************************************************/
 
-#public-title, #followed-title {
+#misobb {
   background: url(/images/logo.png) no-repeat center;
   height: 40px;
   margin:0;
@@ -18,11 +18,12 @@ body {
  * READ
  *****************************************************************************/
  
-span {
+span.text {
   font-weight: normal !important;
 } 
 
 span.info{
+  font-weight: normal !important;
   display: block;
   clear: both;
   color: #aaa;
