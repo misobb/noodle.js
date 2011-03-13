@@ -5,8 +5,6 @@ div(data-role='page')
     a(data-icon='plus', class='ui-btn-right', href='/discussions/create', data-transition='slideup')
       \New
   #content(data-role='content')
-    script(type='text/javascript')
-      $('ul').listview('refresh');
     ul(data-role='listview')
       - for (var d in discussions)
         li

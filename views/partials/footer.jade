@@ -3,16 +3,16 @@
     ul
       li
         - if (page == "Public")
-          a(href="/discussions/public", class="ui-btn-active", data-icon="custom", id="public", data-transition="none") Public
+          a(href="/discussions/public", class="ui-btn-active", data-icon="custom", id="public", data-transition="none", rel="external") Public
         - else
-          a(href="/discussions/public", data-icon="custom", id="public", data-transition="none") Public
+          a(href="/discussions/public", data-icon="custom", id="public", data-transition="none", rel="external") Public
       li
         - if (page == "Followed")
-          a(href="/discussions/followed", class="ui-btn-active", data-icon="custom", id="followed", data-transition="none") Followed
+          a(href="/discussions/followed", class="ui-btn-active", data-icon="custom", id="followed", data-transition="none", rel="external") Followed
         - else
-          a(href="/discussions/followed", data-icon="custom", id="followed", data-transition="none") Followed
+          a(href="/discussions/followed", data-icon="custom", id="followed", data-transition="none", rel="external") Followed
       li
         - if (page == "More")
-          a(href="/more", class="ui-btn-active", data-icon="custom", id="more", data-transition="none") More ...
+          a(href="/more", class="ui-btn-active", data-icon="custom", id="more", data-transition="none", rel="external") More ...
         - else
-          a(href="/more", data-icon="custom", id="more", data-transition="none") More
+          a(href="/more", data-icon="custom", id="more", data-transition="none", rel="external") More
