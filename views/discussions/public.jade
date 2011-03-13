@@ -1,9 +1,9 @@
 div(data-role='page') 
-  div(data-role='header', data-position="fixed")
+  div(data-role='header', data-position="fixed", data-backbtn="false")
     h1
       \Public
     a(data-icon='plus', class='ui-btn-right', href='/discussions/create', data-transition='slideup')
-      Discussion Discussion
+      \New
   div(data-role='content')
     script(type='text/javascript')
       $('ul').listview('refresh');
