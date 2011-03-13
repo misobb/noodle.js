@@ -305,8 +305,8 @@ app.get('/users/create.json', function(req, res){
 });
 
 // create user
-app.get('/more', function(req, res){
-  res.render('discussions/create.jade', {
+app.get('/more', loadUser, function(req, res){
+  res.render('discussions/more.jade', {
     locals: {
       user        : req.user,
       title       : 'Settings' 

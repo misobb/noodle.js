@@ -17,9 +17,10 @@ div(data-role='page')
     ul(data-role='listview')
       - each m in messages
         li
-          p(class='ui-li-aside')
-            =m.d
-          p
-            b=m.u.n
-            \:
+          span
+            b
+              =m.u.n 
+              \:
             =m.b
+          span.info
+            =m.d
