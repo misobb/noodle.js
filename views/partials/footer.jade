@@ -1,0 +1,18 @@
+div(data-role="footer", data-position="fixed")
+  div(data-role="navbar", id="footer")
+    ul
+      li
+        - if (page == "Public")
+          a(href="/discussions/public", class="ui-btn-active", data-icon="custom", id="public") Public
+        - else
+          a(href="/discussions/public", data-icon="custom", id="public") Public
+      li
+        - if (page == "Followed")
+          a(href="/discussions/followed", class="ui-btn-active", data-icon="custom", id="followed") Followed
+        - else
+          a(href="/discussions/followed", data-icon="custom", id="followed") Followed
+      li
+        - if (page == "More")
+          a(href="/discussions/more", class="ui-btn-active", data-icon="custom", id="more") More ...
+        - else
+          a(href="/discussions/more", data-icon="custom", id="more") More

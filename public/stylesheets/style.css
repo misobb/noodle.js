@@ -1,3 +1,52 @@
 body {
   background: #dddddd;
 }
+
+/******************************************************************************
+ * FOOTER
+ *****************************************************************************/ 
+
+#footer .ui-btn .ui-btn-inner { 
+  padding-top: 30px !important; 
+}
+
+#footer .ui-btn .ui-icon {
+  width: 30px!important; 
+  height: 25px!important; 
+  margin-left: -15px !important; 
+  box-shadow: none!important; 
+  -moz-box-shadow: none!important; 
+  -webkit-box-shadow: none!important; 
+  -webkit-border-radius: none !important; 
+  border-radius: none !important; 
+}
+
+#public.ui-btn-active .ui-icon { 
+  background:  url(/images/08-chat-dark.png) 50% 50% no-repeat; 
+  background-size: 24px 22px; 
+}
+
+#public .ui-icon { 
+  background:  url(/images/08-chat.png) 50% 50% no-repeat; 
+  background-size: 24px 22px; 
+}
+
+#followed .ui-icon { 
+  background:  url(/images/112-group.png) 50% 50% no-repeat; 
+  background-size: 32px 21px;  
+}
+
+#followed.ui-btn-active .ui-icon { 
+  background:  url(/images/112-group-dark.png) 50% 50% no-repeat; 
+  background-size: 32px 21px;  
+}
+
+#more.ui-btn-active .ui-icon { 
+  background:  url(/images/106-sliders-dark.png) 50% 50% no-repeat;  
+  background-size: 24px 24px; 
+}
+
+#more .ui-icon { 
+  background:  url(/images/106-sliders.png) 50% 50% no-repeat;  
+  background-size: 24px 24px; 
+}

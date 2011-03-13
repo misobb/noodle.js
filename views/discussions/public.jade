@@ -20,12 +20,4 @@ div(data-role='page')
             =discussions[d].m.b
           p(class='ui-li-aside')
             =discussions[d].m.d
-  div(data-role="footer", data-position="fixed")
-    div(data-role="navbar")
-      ul
-        li
-          a(href="/discussions/public", class="ui-btn-active")
-            \Public
-        li
-          a(href="/discussions/followed")
-            \Followed
+  !=partial('../partials/footer', { locals: { page: "Public" } })
