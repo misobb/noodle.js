@@ -101,11 +101,11 @@ function loadUser(req, res, next) {
  *****************************************************************************/
 
 // list publics discussions
-app.get('/', function (req, res){
-  res.redirect('/discussions/public');
-});
+app.get('/', publicDiscussion);
 
-app.get('/discussions/public.:format?', function(req, res) {
+app.get('/discussions/public.:format?', publicDiscussion);
+
+function publicDiscussion (req, res) {
   Discussion.find({})
   .sort('m.d', -1) // sort by last message date
   .execFind( function(err, discussions) {
@@ -122,7 +122,7 @@ app.get('/discussions/public.:format?', function(req, res) {
         });
     }
   });
-});
+}
 
 // list followed discussion
 app.get('/discussions/followed.:format?', loadUser, function(req, res) {
@@ -301,6 +301,16 @@ app.get('/users/create.json', function(req, res){
   user.n  = user.generateNickname();
   user.save(function() {
     res.send({status: 'OK', results: {user: user}});
+  });
+});
+
+// create user
+app.get('/more', function(req, res){
+  res.render('discussions/create.jade', {
+    locals: {
+      user        : req.user,
+      title       : 'Settings' 
+    }
   });
 });
 

@@ -1,9 +1,9 @@
 div(data-role='page') 
-  div(data-role='header')
+  div(data-role='header', data-theme="b")
     h1
       =discussion.t
     a(data-icon="arrow-l", class="ui-btn-left", href="/", data-transition="slide", data-back="true")
-      Back Public
+      \Public
   div(data-role='content')
     form(method='post', action='/messages/create')
       input(type="hidden", name="discussion_id",value=discussion._id)
