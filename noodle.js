@@ -83,6 +83,7 @@ function loadUser(req, res, next) {
       if (!user) {
         user    = new User();
         user.n  = user.generateNickname();
+        user.a  = '/images/avatar_' + Math.floor(Math.random() * 4) + '.png';
         user.save(function() {
           var past = new Date() + 9999999999;
           res.cookie('userid', user._id, { 
@@ -202,6 +203,7 @@ app.post('/discussions/create.:format?', loadUser, function(req, res) {
     discussion.s.push({
       uid : req.user._id,
       n   : req.user.n,
+      a   : req.user.a, 
       d   : now
     });
     discussion.save(function(err) {
@@ -215,8 +217,9 @@ app.post('/discussions/create.:format?', loadUser, function(req, res) {
         b: req.body.message,
         d: now,
         u: {
-          id : req.user._id,
-          n   : req.user.n
+          id  : req.user._id,
+          n   : req.user.n,
+          a   : req.user.a
         }
       }).save();
       switch (req.params.format) {

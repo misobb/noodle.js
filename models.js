@@ -69,7 +69,8 @@ function defineModels(mongoose, fn) {
   var Subscription = new Schema({
     uid : String,
     n : String,
-    d : String
+    d : String,
+    a : String
   });
 
   mongoose.model('Subscription', Subscription);
@@ -83,8 +84,8 @@ function defineModels(mongoose, fn) {
     t   : String,                                     // title
     m   : {
       u : {
-        id : String,
-        n : String
+        id  : String,
+        n   : String
       },
       b : String,
       d : String
