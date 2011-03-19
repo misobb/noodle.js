@@ -11,7 +11,8 @@ function defineModels(mongoose, fn) {
      ***************************************************************************/
     var User = new Schema({
       _id : { type: String, index: { unique: true } },  // unique id
-      n   : String                                      // nickname
+      n   : String,                                     // nickname
+      a   : String                                      // avatar
     });
 
     User.method('generateNickname', function() {
@@ -67,7 +68,8 @@ function defineModels(mongoose, fn) {
   
   var Subscription = new Schema({
     uid : String,
-    n : String
+    n : String,
+    d : String
   });
 
   mongoose.model('Subscription', Subscription);
@@ -108,7 +110,8 @@ function defineModels(mongoose, fn) {
     i : { type: String, index: true },  // discussion_id
     u : {                               // user (author)
       id : String,                       // user_id
-      n : String                        // nickname 
+      n : String,                        // nickname 
+      a : String
     },
     b : String,                         // body
     d : String                          // date (created)

@@ -2,15 +2,19 @@
  * DEPENDANCIES
  *****************************************************************************/
 
-var express = require('express'),
-  connect   = require('connect'),
-  jade      = require('jade'),
-  mongoose  = require('mongoose')
-  sys       = require('sys'),
-  path      = require('path'),
-  models    = require('./models'),
-  utils     = require('./utilities'),
-  app       = module.exports = express.createServer();
+var express   = require('express'),
+  connect     = require('connect'),
+  jade        = require('jade'),
+  mongoose    = require('mongoose')
+  sys         = require('sys'),
+  path        = require('path'),
+  models      = require('./models'),
+  utils       = require('./utilities'),
+  form        = require('connect-form'),
+  fs          = require('fs'),
+  app         = express.createServer(
+    form({ keepExtensions: true })
+  );
 
 /******************************************************************************
  * CONFIGURATIONS
@@ -21,7 +25,6 @@ app.configure(function(){
   app.set('view engine', 'jade');
   app.use(express.bodyParser());
   app.use(express.cookieParser());
-  app.use(express.session({ secret: "baka neko" }));
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
@@ -145,6 +148,30 @@ app.get('/discussions/followed.:format?', loadUser, function(req, res) {
   });
 });
 
+// follow or unfollow a discussion without posting messages
+app.get('/discussions/toggle_follow/:discussion_id.:format?', loadUser, function(req, res) {
+  Discussion.findOne({ '_id' : req.body.discussion_id }, function(err, discussion) {
+    var in_array = false;
+    for (x = 0; x < discussion.s.length; x=x+1) {
+      if (discussion.s[x].uid == req.user._id) {
+        in_array = true;
+        discussion.s[x].d = now;
+        discussion.s(discussion.s.id[x]._id).remove();
+        break;
+      }
+    }
+    var now = (new Date().getTime()) / 1000;
+    if (! in_array) {
+      discussion.s.push({ 
+        uid : req.user._id, 
+        n   : req.user.n,
+        d   : now
+      });
+    }
+    redirect('/');
+  });
+});
+
 // create discussion
 app.get('/discussions/create', loadUser, function(req, res) {
   res.render('discussions/create.jade', {
@@ -174,7 +201,8 @@ app.post('/discussions/create.:format?', loadUser, function(req, res) {
     });
     discussion.s.push({
       uid : req.user._id,
-      n   : req.user.n
+      n   : req.user.n,
+      d   : now
     });
     discussion.save(function(err) {
       if (err) {
@@ -256,13 +284,15 @@ app.post('/messages/create.:format?', loadUser, function(req, res) {
         for (x = 0; x < discussion.s.length; x=x+1) {
           if (discussion.s[x].uid == req.user._id) {
             in_array = true;
+            discussion.s[x].d = now;
             break;
           }
         }
         if (! in_array) {
           discussion.s.push({ 
             uid : req.user._id, 
-            n   : req.user.n
+            n   : req.user.n,
+            d   : now
           });
         }
         discussion.save(function(err) {
@@ -274,8 +304,9 @@ app.post('/messages/create.:format?', loadUser, function(req, res) {
             b: req.body.message,
             d: now,
             u: {
-              id: req.user.id,
-              n: req.user.n
+              id  : req.user.id,
+              n   : req.user.n,
+              a   : req.user.a
             }
           });
           message.save(function(err) {
@@ -306,34 +337,42 @@ app.get('/users/create.json', function(req, res){
 });
 
 // update user
-app.post('/users/update.:format?', loadUser, function(req, res){
-  if (typeof req.body.nickname == 'undefined') {
-    res.send({"status": "FAIL", "results": "nickname must be provided"});
-  } else {
-    User.findById(req.user._id, function(err, user) {
-      if (!user) {
-        res.send({"status": "FAIL", "results": "user doesn't exists"});
-      } else {
-        user.n = req.body.nickname;
-        user.save(function (err){
-          req.flash('info', 'identity updated');
-          switch (req.params.format) {
-            case 'json':
-              res.send({status: 'OK', results: {user: user}});
-            break;
-            default:
-              res.redirect('/more');
-            break;
+app.post('/users/update.:format?', function(req, res, next){
+  req.form.uploadDir = __dirname + '/public/images/avatars/';
+  req.form.complete(function(err, fields, files){
+    if (err) {
+      next(err);
+    } else {
+      loadUser(req, res, function(){
+        User.findById(req.user._id, function(err, user) {
+          if (!user) {
+            res.send({"status": "FAIL", "results": "user doesn't exists"});
+          } else {
+            user.n = fields.nickname;
+            user.a = files.avatar.path.substr(
+              req.form.uploadDir.length - 16,
+              files.avatar.path.length
+            );
+            user.save(function (err){
+              switch (req.params.format) {
+                case 'json':
+                  res.send({status: 'OK', results: {user: user}});
+                break;
+                default:
+                  res.redirect('/more');
+                break;
+              }
+            });
           }
         });
-      }
-    });
-  }
+      });
+    }
+  });
+  res.redirect('/more');
 });
 
 // create user
 app.get('/more', loadUser, function(req, res){
-  //@TODO flash message : console.log(req.session.flash);
   res.render('discussions/more.jade', {
     locals: {
       user  : req.user,
