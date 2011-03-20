@@ -23,8 +23,8 @@ body {
  *****************************************************************************/
 
 .message-body {
-  margin-left : 55px;
-  min-height: 50px;
+  margin-left : 40px;
+  min-height: 45px;
 } 
  
 span.text {
@@ -40,12 +40,9 @@ span.info{
 }
 
 .ui-li-thumb {
-  margin: 6px 0 10px 5px;
-}
-
-.ui-li-has-thumb .ui-btn-inner {
-  min-height: 30px !important;
-  padding-left: 60px !important;
+  margin: 10px 0 10px 5px;
+  width: 40px;
+  height: 40px;
 }
 
 /******************************************************************************
