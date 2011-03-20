@@ -1,6 +1,11 @@
 /**
+ * MODELS
+ *
  * we are using 1 character member name for space and memory usage
  */
+
+var str_pad     = require('./middleware/str_pad'),
+  baseConverter = require('./middleware/base_converter');
 
 function defineModels(mongoose, fn) {
   var Schema    = mongoose.Schema,
@@ -54,8 +59,8 @@ function defineModels(mongoose, fn) {
 
     User.pre('save', function(next) {
       if (! this._id) {
-        var nb    = require('./utilities').str_pad(Math.ceil(Math.random() * 2176782336), 9, 0, 'STR_PAD_RIGHT');
-        this._id  = require('./utilities').baseConverter(nb, 10, 36);
+        var nb    = str_pad(Math.ceil(Math.random() * 2176782336), 9, 0, 'STR_PAD_RIGHT');
+        this._id  = baseConverter(nb, 10, 36);
       }
       next();
     });
@@ -95,8 +100,8 @@ function defineModels(mongoose, fn) {
 
   Discussion.pre('save', function(next) {
     if (! this._id) {
-      var nb    = require('./utilities').str_pad(Math.ceil(Math.random() * 2176782336), 9, 0, 'STR_PAD_RIGHT');
-      this._id  = require('./utilities').baseConverter(nb, 10, 36);
+      var nb    = str_pad(Math.ceil(Math.random() * 2176782336), 9, 0, 'STR_PAD_RIGHT');
+      this._id  = baseConverter(nb, 10, 36);
     }
     next();
   });
