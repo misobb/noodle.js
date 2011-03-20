@@ -10,10 +10,16 @@ div(data-role='page')
         =user.n
       div
         label Title:
+      div
         input(name='title')
       div
         label Message:
       div
         textarea(name='message')
+      div(data-role="fieldcontain")
+        fieldset(data-role="controlgroup")
+          input(type="checkbox", name="public", id="public", class="custom", checked="checked")
+          label(for="public")
+            \Public
       div
-        input(type='submit', value='Add a message')
+        input(type='submit', value='Add a message', data-theme="a")

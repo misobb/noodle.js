@@ -2,7 +2,7 @@
 var prettyDate = require('../../middleware/pretty_date');
 
 module.exports = function (req, res) {
-  Discussion.find({})
+  Discussion.find({p : "1"})
   .sort('m.d', -1) // sort by last message date
   .execFind( function(err, discussions) {
     switch (req.params.format) {

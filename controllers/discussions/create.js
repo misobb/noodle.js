@@ -3,8 +3,10 @@ module.exports = function(req, res) {
     res.send({"status": "FAIL", "results": "title and message must be provided"});
   } else {
     var now         = (new Date().getTime()) / 1000;
+    req.body.public = req.body.public == 'on' ? 1 : 0;
     var discussion  = new Discussion({
       t : req.body.title,
+      p : req.body.public,
       m : {
         u: {
           id : req.user._id,
