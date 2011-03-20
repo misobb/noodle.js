@@ -1,0 +1,15 @@
+div(data-role='content')
+  ul(data-role='listview')
+    - for (var d in discussions)
+      li
+        h3
+          a(href='/' + discussions[d].id) 
+            =discussions[d].t
+        p
+          strong
+            =discussions[d].m.u.n
+          \:
+          =discussions[d].m.b
+          span.info
+            =discussions[d].m.d
+          

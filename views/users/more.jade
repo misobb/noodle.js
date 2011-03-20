@@ -1,0 +1,22 @@
+div(data-role='page') 
+  div(data-role='header', data-position="fixed", data-backbtn="false", data-theme="b", data-position="fixed")
+    h1#misobb
+      \More
+  div(data-role='content')
+    - if (flash != null)
+      #flash
+        =flash
+    form(method='post', action='/users/update', data-transition="none", enctype="multipart/form-data")
+      div
+        input(type='text', name="nickname", value=user.n)
+      div
+        input(type='file', name="avatar")
+      div
+        input(type='submit', value='Update your identity')
+    br
+    form(method='post', action='/discussions/join', data-transition="none")
+      div
+        input(type='text', name="discussion_id")
+      div
+        input(type='submit', value='Join a discussion by ID')
+  !=partial('../partials/footer', { locals: { page: "More" } })
