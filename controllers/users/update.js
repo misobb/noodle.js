@@ -12,16 +12,19 @@ module.exports = function(req, res, next){
             res.send({"status": "FAIL", "results": "user doesn't exists"});
           } else {
             user.n = fields.nickname;
-            user.a = files.avatar.path.substr(
-              req.form.uploadDir.length - 40,
-              files.avatar.path.length
-            );
+            if (files.avatar != undefined) {
+              user.a = files.avatar.path.substr(
+                req.form.uploadDir.length - 40,
+                files.avatar.path.length
+              );
+            }
             user.save(function (err){
               switch (req.params.format) {
                 case 'json':
                   res.send({status: 'OK', results: {user: user}});
                 break;
                 default:
+                  req.session.error = 'profile updated';
                   res.redirect('/more');
                 break;
               }
@@ -31,5 +34,4 @@ module.exports = function(req, res, next){
       });
     }
   });
-  res.redirect('/more');
 }
