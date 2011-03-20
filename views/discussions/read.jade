@@ -17,15 +17,15 @@ div(data-role='page')
     ul(data-role='listview')
       - each m in messages
         li
-          a(href="")
-            - if (m.u.a)
-              image(src=m.u.a)
-            - else
-              image(src="/images/avatar_0.png")
-          span.text
-            b
-              =m.u.n 
-              \:
-            =m.b
-          span.info
-            =m.d
+          - if (m.u.a)
+            image(src=m.u.a)
+          - else
+            image(src="/images/avatar_0.png")
+          .message-body
+            span.text
+              b
+                =m.u.n 
+                \:
+              =m.b
+            span.info
+              =m.d

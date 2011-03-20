@@ -21,6 +21,11 @@ body {
 /******************************************************************************
  * READ
  *****************************************************************************/
+
+.message-body {
+  margin-left : 55px;
+  min-height: 50px;
+} 
  
 span.text {
   font-weight: normal !important;
@@ -35,7 +40,7 @@ span.info{
 }
 
 .ui-li-thumb {
-  margin: 6px 0 5px 5px;
+  margin: 6px 0 10px 5px;
 }
 
 .ui-li-has-thumb .ui-btn-inner {
