@@ -35,11 +35,13 @@ app.configure('test', function() {
 });
 
 app.configure('development', function() {
+  app.set('port', 3000);
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
   app.set('db-uri', 'mongodb://localhost/misobb-development');
 });
 
 app.configure('production', function() {
+  app.set('port', 80);
   app.use(express.errorHandler());
   app.set('db-uri', 'mongodb://localhost/misobb');
 });
@@ -66,7 +68,7 @@ require('./controllers/routes').set(app);
  * LAUNCH
  *****************************************************************************/
 if (!module.parent) {
-  app.listen(3000);
+  app.listen(app.set('port'));
   var now = new Date();
   console.log(now.toUTCString() + " noodle.js served on port %d", app.address().port)
 }
