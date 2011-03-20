@@ -18,6 +18,18 @@ body {
  * LIST
  *****************************************************************************/
 
+.ui-li .ui-btn-inner {
+  padding: 7px 15px !important;
+}
+
+.ui-li-heading {
+  margin: 0 !important;
+}
+
+.ui-li-desc {
+  margin: 0 !important;
+}
+
 /******************************************************************************
  * READ
  *****************************************************************************/
@@ -37,6 +49,7 @@ span.info{
   clear: both;
   color: #aaa;
   font-size: 0.9em;
+  margin-top: 3px;
 }
 
 .ui-li-thumb {

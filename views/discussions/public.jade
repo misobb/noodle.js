@@ -4,18 +4,5 @@ div(data-role='page')
       \Public
     a(data-icon='plus', class='ui-btn-right', href='/discussions/create', data-transition='slideup')
       \New
-  #content(data-role='content')
-    ul(data-role='listview')
-      - for (var d in discussions)
-        li
-          h3
-            a(href='/' + discussions[d].id) 
-              =discussions[d].t
-          p
-            strong
-              =discussions[d].m.u.n
-            \:
-            =discussions[d].m.b
-          p(class='ui-li-aside')
-            =discussions[d].m.d
+  !=partial('../partials/discussions/list', { locals: { discussions: discussions } })
   !=partial('../partials/footer', { locals: { page: "Public" } })
