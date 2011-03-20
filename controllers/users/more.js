@@ -1,8 +1,14 @@
 module.exports = function(req, res){
-  res.render('discussions/more.jade', {
+  var flash = null;
+  if (req.session.error && req.session.error.length) {
+    flash = req.session.error;
+    req.session.error = null
+  }
+  res.render('users/more.jade', {
     locals: {
       user  : req.user,
-      title : 'Settings' 
+      title : 'Settings',
+      flash : flash
     }
   });
 }

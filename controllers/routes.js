@@ -14,6 +14,9 @@ exports.set = function(app){
 
   // list followed discussion
   app.get('/discussions/followed.:format?', loadUser, require('./discussions/followed'));
+
+  // join discussion by ID
+  app.post('/discussions/join', require('./discussions/join'));
   
   // create discussion
   app.get('/discussions/create', loadUser, require('./discussions/new'));

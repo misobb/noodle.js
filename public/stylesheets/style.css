@@ -2,6 +2,17 @@ body {
   background: #dddddd;
 }
 
+#flash {
+  border: 1px solid #000;
+  text-align: center;
+  width: 100%;
+  margin: 0px auto 10px auto;
+  padding: 10px 0;
+  font-weight: bold;
+  background: yellow;
+  display: none;
+}
+
 /******************************************************************************
  * HEADER
  *****************************************************************************/
@@ -19,7 +30,7 @@ body {
  *****************************************************************************/
 
 .ui-li .ui-btn-inner {
-  padding: 7px 15px !important;
+  padding: 7px 40px 7px 15px !important;
 }
 
 .ui-li-heading {
