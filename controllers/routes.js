@@ -15,15 +15,17 @@ exports.set = function(app){
   // list followed discussion
   app.get('/discussions/followed.:format?', loadUser, require('./discussions/followed'));
   
-  // new discussion form
-  app.get('/discussions/create', loadUser, require('./discussions/new'));
-  
   // create discussion
+  app.get('/discussions/create', loadUser, require('./discussions/new'));
   app.post('/discussions/create.:format?', loadUser, require('./discussions/create'));
 
   // read discussion
   app.get(/^(?:\/([0-9a-z]{6})?)?$/, loadUser, require('./discussions/read'));
   app.get('/discussions/read/:id.:format?', loadUser, require('./discussions/read'));
+  
+  // update discussion
+  app.get('/discussions/update/:id.:format?', loadUser, require('./discussions/options'));
+  app.post('/discussions/update.:format?', loadUser, require('./discussions/update'));
   
   /****************************************************************************
    * MESSAGES

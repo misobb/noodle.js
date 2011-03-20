@@ -4,6 +4,8 @@ div(data-role='page')
       =discussion.t
     a(data-icon="arrow-l", class="ui-btn-left", href="/", data-transition="slide", data-back="true")
       \Public
+    a(href="/discussions/update/" + discussion._id, data-icon="gear", class="ui-btn-right")
+      \More
   div(data-role='content')
     form(method='post', action='/messages/create')
       input(type="hidden", name="discussion_id",value=discussion._id)
