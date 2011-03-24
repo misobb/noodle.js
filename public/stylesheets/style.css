@@ -69,6 +69,45 @@ span.info{
   height: 40px;
 }
 
+#create-message {
+  margin: -15px;
+  padding: 10px 5px 25px 5px;
+  display: block;
+  background: grey;
+}
+
+#message-textarea {
+  width: 80%;
+}
+
+.no-text {
+  color: #bbb;  
+}
+
+.filled {
+  color: #000;
+}
+
+.contract {
+  height: 25px !important;
+}
+
+.expand {
+  height: 75px !important;
+}
+
+#create-message .ui-btn{
+  display: none;
+}
+
+#create-message img {
+  margin-top: 3px;
+  float: left;
+  width: 35px;
+  height: 35px;
+  margin-right: 5px;
+}
+
 /******************************************************************************
  * READ
  *****************************************************************************/
