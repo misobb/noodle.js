@@ -9,13 +9,19 @@ $('[data-role=page]').live('pageshow', function() {
     $("#create-message .ui-btn").show();
   });
   $("#message-textarea").focusout(function() {
-    if ($(this).val() == "") {
-      $(this).html("send a message");
-      $(this).removeClass("filled");
-      $(this).addClass("no-text");
+    var flag = true;
+    $("#submit-message").click(function() {
+      flag = false;
+    });
+    if (flag) {
+      if ($(this).val() == "") {
+        $(this).html("send a message");
+        $(this).removeClass("filled");
+        $(this).addClass("no-text");
+      }
+      $(this).removeClass("expand");
+      $(this).addClass("contract");
+      $("#create-message .ui-btn").hide(flag);
     }
-    $(this).removeClass("expand");
-    $(this).addClass("contract");
-    $("#create-message .ui-btn").hide();
   });
 });
