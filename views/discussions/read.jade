@@ -7,13 +7,16 @@ div(data-role='page')
     a(href="/discussions/update/" + discussion._id, data-icon="gear", class="ui-btn-right")
       \More
   div(data-role='content', id="read")
-    form(method='post', action='/messages/create', id="create-message")
-      input(type="hidden", name="discussion_id", value=discussion._id)
-      div
-        img(src=user.a, id="current-avatar")
-        textarea(name='message', id="message-textarea", class="contract no-text")
-      div
-        input(type='submit', value='Add a message', id="submit-message")
+    #create-message
+      #avatar-col
+        img(src=user.a)
+      #form-col
+        form(method='post', action='/messages/create')
+          input(type="hidden", name="discussion_id", value=discussion._id)
+          div
+            textarea(name='message', class="contract no-text")
+          div
+            input(type='submit', value='Add a message')
     ul(data-role='listview')
       - each m in messages
         li

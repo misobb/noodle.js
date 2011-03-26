@@ -69,47 +69,48 @@ span.info{
   height: 40px;
 }
 
+/******************************************************************************
+ * CREATE MESSAGE
+ *****************************************************************************/
+
 #create-message {
   margin: -15px;
-  padding: 10px 5px 25px 5px;
-  display: block;
   background: grey;
+  padding: 10px 10px 27px 5px;
 }
 
-#message-textarea {
-  width: 80%;
-}
-
-.no-text {
-  color: #bbb;  
-}
-
-.filled {
-  color: #000;
-}
-
-.contract {
-  height: 25px !important;
-}
-
-.expand {
-  height: 75px !important;
-}
-
-#create-message .ui-btn{
-  display: none;
-}
-
-#create-message img {
-  margin-top: 3px;
+#avatar-col {
+  width: 35px;
   float: left;
+}
+
+#avatar-col img{
   width: 35px;
   height: 35px;
-  margin-right: 5px;
+}
+
+#form-col {
+  margin-left: 40px;
+}
+
+#form-col textarea {
+  width: 100% !important;
+  padding: 0 !important;
+}
+
+#form-col .ui-btn {
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 5px 0 0 0;
+}
+
+#form-col .ui-btn-inner {
+  margin: 0;
+  padding: 5px;
 }
 
 /******************************************************************************
- * READ
+ * OPTIONS
  *****************************************************************************/
 
 .ui-checkbox {
