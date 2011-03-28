@@ -1,0 +1,8 @@
+div(data-role='page', class="qrcode") 
+  div(data-role='header', data-backbtn="false", data-theme="b", data-position="fixed")
+    h1
+      =discussion.t
+    a(data-icon="arrow-l", class="ui-btn-left", href="/discussions/update/" + discussion._id, data-transition="slide", data-back="true")
+      \Back
+  div(data-role='content')
+    image(src="https://chart.googleapis.com/chart?chld=l|1&cht=qr&chs=300x300&chl=http://misobb.com/" + discussion._id, class="qr")

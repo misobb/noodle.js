@@ -4,7 +4,7 @@ div(data-role='page')
       =discussion.t
     a(data-icon="arrow-l", class="ui-btn-left", href="/" + discussion._id, data-transition="slide", data-back="true")
       \Back
-  div(data-role='content')
+  div(data-role='content', class="options")
     form(method='post', action='/discussions/update', data-transition="none")
       div
         input(type='hidden', name="discussion_id", value=discussion._id)
@@ -20,8 +20,28 @@ div(data-role='page')
             image(src=discussion.s.toObject()[u].a)
           - else
             image(src="/images/avatar_0.png")
-          h4
+          a(href="#")
             =discussion.s.toObject()[u].n
-    br
-    br
-    image(src="https://chart.googleapis.com/chart?cht=qr&chs=250x250&chl=http://misobb.com/" + discussion._id, class="qr")
+          span.info
+            \last seen : 
+            =discussion.s.toObject()[u].d
+    h3
+      \Sharing
+    ul(data-role="listview", data-inset="true", class="sharing")
+      li
+        image(src="/images/twitter.png")
+        a(href="http://twitter.com/share?url=&text=" + discussion.t + " http://misobb.com/" + discussion._id, target="_blank")
+          \Share on Twitter
+      li
+        image(src="/images/facebook.png")
+        a(href="http://www.facebook.com/sharer.php?u=http://misobb.com/" + discussion._id + "&t=" + discussion.t)
+          \Share on Facebook
+      li
+        image(src="/images/email.png")
+        a(href="#")
+          \Share by email
+      li
+        image(src="/images/qrcode.png")
+        a(href="/discussions/qrcode/" + discussion._id)
+          \QRcode of the discussion
+    

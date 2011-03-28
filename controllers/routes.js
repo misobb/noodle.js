@@ -28,6 +28,7 @@ exports.set = function(app){
   
   // update discussion
   app.get('/discussions/update/:id.:format?', loadUser, require('./discussions/options'));
+  app.get('/discussions/qrcode/:id.:format?', loadUser, require('./discussions/qrcode'));
   app.post('/discussions/update.:format?', loadUser, require('./discussions/update'));
   
   /****************************************************************************
