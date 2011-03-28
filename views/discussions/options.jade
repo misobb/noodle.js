@@ -11,5 +11,17 @@ div(data-role='page')
         input(type='text', name="title", value=discussion.t)
       div
         input(type='submit', value='Update title')
+    h3
+      \Participants
+    ul(data-role='listview', class="participants", data-inset="true")
+      - for (var u in discussion.s.toObject())
+        li
+          - if (discussion.s.toObject()[u].a)
+            image(src=discussion.s.toObject()[u].a)
+          - else
+            image(src="/images/avatar_0.png")
+          h4
+            =discussion.s.toObject()[u].n
+    br
     br
     image(src="https://chart.googleapis.com/chart?cht=qr&chs=250x250&chl=http://misobb.com/" + discussion._id, class="qr")

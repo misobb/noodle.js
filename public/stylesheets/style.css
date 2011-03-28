@@ -116,7 +116,22 @@ span.info{
 .ui-checkbox {
   width: 120px !important;
 } 
- 
+
+.participants li {
+  min-height: 45px;
+}
+
+.participants li img {
+  width: 40px;
+  height: 40px;
+  border-radius: 0;
+  margin-left: 10px;
+}
+
+.participants h4 {
+  margin-left: 45px !important;
+}
+
 /******************************************************************************
  * FOOTER
  *****************************************************************************/ 
