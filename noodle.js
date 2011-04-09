@@ -11,6 +11,7 @@ var express   = require('express'),
   models      = require('./models'),
   form        = require('connect-form'),
   fs          = require('fs'),
+  RedisStore  = require('connect-redis'),
   app         = express.createServer(
     form({ keepExtensions: true })
   );
@@ -24,7 +25,7 @@ app.configure(function(){
   app.set('view engine', 'jade');
   app.use(express.bodyParser());
   app.use(express.cookieParser());
-  app.use(express.session({ secret: "baka neko" }));
+  app.use(express.session({ secret: "baka neko", store: new RedisStore }));
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
