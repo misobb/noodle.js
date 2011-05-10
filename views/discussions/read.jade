@@ -29,7 +29,7 @@ div(data-role='page')
               b
                 =m.u.n 
                 \:
-              - m.b = m.b.replace(/\n/g,'<br />');
+              - m.b = m.b.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\n/g,'<br />');
               !{m.b}
             span.info
               =m.d
