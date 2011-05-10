@@ -16,6 +16,7 @@ module.exports = function (req, res) {
           default:
             for (x=0; x<messages.length; x=x+1) {
               messages[x].doc.d = prettyDate(messages[x].doc.d * 1000);
+              
             }
             res.render('discussions/read.jade', {
               locals: {
