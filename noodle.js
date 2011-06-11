@@ -11,7 +11,7 @@ var express   = require('express'),
   models      = require('./models'),
   form        = require('connect-form'),
   fs          = require('fs'),
-  RedisStore  = require('connect-redis'),
+  RedisStore  = require('connect-redis')(connect),
   app         = express.createServer(
     form({ keepExtensions: true })
   );

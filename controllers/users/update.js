@@ -3,6 +3,7 @@ var loadUser = require('../../middleware/load_user');
 module.exports = function(req, res, next){
   req.form.uploadDir = __dirname + '/../../public/images/avatars/';
   req.form.complete(function(err, fields, files){
+    console.log(files);
     if (err) {
       next(err);
     } else {
@@ -21,6 +22,7 @@ module.exports = function(req, res, next){
             user.save(function (err){
               switch (req.params.format) {
                 case 'json':
+                console.log(user);
                   res.send({status: 'OK', results: {user: user}});
                 break;
                 default:
